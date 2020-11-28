@@ -13,9 +13,9 @@ class MyStack {
   }
 
   pop(): number {
-    const deletetNum = this.stack[this.size - 1];
+    const deletedNum = this.stack[this.size - 1];
     this.size -= 1;
-    return deletetNum;
+    return deletedNum;
   }
 
   peek(): number {
@@ -28,50 +28,37 @@ class MyStack {
 }
 
 class MyQueue {
-  private queue: MyStack;
-  private stack: MyStack;
-  private needToReverse: boolean = false;
+  private leftStack: MyStack;
+  private rightStack: MyStack;
 
   constructor() {
-    this.queue = new MyStack();
+    this.leftStack = new MyStack();
+    this.rightStack = new MyStack();
   }
 
-  private reverseStack() {
-    const stack = new MyStack();
-    while (!this.queue.empty()) {
-      const last = this.queue.pop();
-      stack.push(last);
-    }
+  private checkRightStack() {
+    if (!this.rightStack.empty()) return;
 
-    this.queue = stack;
-  }
-
-  private reverseForPop() {
-    if (this.needToReverse) {
-      this.reverseStack();
-      this.needToReverse = false;
+    while (!this.leftStack.empty()) {
+      this.rightStack.push(this.leftStack.pop());
     }
   }
 
   push(x: number): void {
-    if (!this.needToReverse) this.reverseStack();
-    this.queue.push(x);
-    this.needToReverse = true;
+    this.leftStack.push(x);
   }
 
   pop(): number {
-    this.reverseForPop();
-    return this.queue.pop();
+    this.checkRightStack();
+    return this.rightStack.pop();
   }
 
   peek(): number {
-    this.reverseForPop();
-    return this.queue.peek();
+    this.checkRightStack();
+    return this.rightStack.peek();
   }
 
   empty(): boolean {
-    return this.queue.empty();
+    return this.leftStack.empty() && this.rightStack.empty();
   }
 }
-
-export default MyQueue;
