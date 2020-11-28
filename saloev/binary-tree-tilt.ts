@@ -19,20 +19,19 @@ const sumTree = (tree: TreeNode | null): number => {
 
 function findTilt(root: TreeNode | null): number {
   const iter = (tree: TreeNode | null) => {
-    if (!tree) return;
+    if (!tree) return tree;
 
     const { left, right } = tree;
 
-    const sum = [left, right]
+    const leftRightSumDiff = [left, right]
       .map(sumTree)
       .reduce((prev, item) => Math.abs(prev - item));
 
-    tree.val = sum;
-    iter(left);
-    iter(right);
+    const newTree = new TreeNode(leftRightSumDiff, iter(left), iter(right));
+    return newTree;
   };
-  iter(root);
-  return sumTree(root);
+  const newTree = iter(root);
+  return sumTree(newTree);
 }
 
 export default findTilt;
