@@ -33,10 +33,7 @@ class MyHashMap {
       const [key, value] = saveData[i];
       if (value === null || value === undefined) continue;
 
-      const index = this.findNextPos(key);
-
-      this.map[index] = [key, value];
-      this.inserted[index] = true;
+      this.put(key, value);
     }
   }
 
@@ -76,7 +73,6 @@ class MyHashMap {
     if (index === -1) return;
 
     this.map[index] = [];
-    this.inserted[index] = false;
     this.size -= 1;
   }
 }
