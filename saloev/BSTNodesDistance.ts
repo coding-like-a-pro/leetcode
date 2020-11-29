@@ -3,18 +3,17 @@ function minDiffInBST(root: TreeNode | null): number {
     const iter = (tree: TreeNode | null) => {
         if (!tree) return;
         const {left, right, val} = tree;
-        treeToArr.push(val);
         iter(left);
+        treeToArr.push(val);
         iter(right);
+      
     }
     iter(root);
-    
-    let min = Math.abs(treeToArr[1] - treeToArr[0]);
-    for (let i = 0; i < treeToArr.length; i += 1) {
-        for (let j = i + 1; j < treeToArr.length; j += 1) {
-            const diff = Math.abs(treeToArr[i] - treeToArr[j]);
-            min = Math.min(min, diff);
-        }
+  
+    let min;
+    for (let i = 0; i < treeToArr.length - 1; i += 1) {
+        const diff = Math.abs(treeToArr[i] - treeToArr[i + 1]);
+        min = min !== undefined ? Math.min(min, diff) : diff;
     }
     
     return min;
