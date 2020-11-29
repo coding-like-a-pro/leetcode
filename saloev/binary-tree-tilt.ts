@@ -1,14 +1,3 @@
-class TreeNode {
-  val: number;
-  left: TreeNode | null;
-  right: TreeNode | null;
-  constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
-    this.val = val === undefined ? 0 : val;
-    this.left = left === undefined ? null : left;
-    this.right = right === undefined ? null : right;
-  }
-}
-
 const sumTree = (tree: TreeNode | null): number => {
   if (!tree) return 0;
 
@@ -17,21 +6,32 @@ const sumTree = (tree: TreeNode | null): number => {
   return val + sumTree(left) + sumTree(right);
 };
 
+const copyTree = (tree: TreeNode | null): TreeNode | null => {
+  if (!tree) return tree;
+  
+  const {left, right, val} = tree;
+  const newTree = new TreeNode(val);
+  newTree.left = copyTree(left);
+  newTree.right = copyTree(right);
+  return newTree;
+};
+
 function findTilt(root: TreeNode | null): number {
   const iter = (tree: TreeNode | null) => {
-    if (!tree) return tree;
+    if (!tree) return 0;
 
-    const { left, right } = tree;
+    const { left, right, val } = tree;
 
-    const leftRightSumDiff = [left, right]
-      .map(sumTree)
-      .reduce((prev, item) => Math.abs(prev - item));
+    const leftSum = iter(left);
+    const rightSum = iter(right);
+    const sum = leftSum + rightSum + val;
 
-    const newTree = new TreeNode(leftRightSumDiff, iter(left), iter(right));
-    return newTree;
+    tree.val = Math.abs(leftSum - rightSum);
+    
+    return sum;
   };
-  const newTree = iter(root);
+  
+  const newTree = copyTree(root);
+  iter(newTree);
   return sumTree(newTree);
 }
-
-export default findTilt;
